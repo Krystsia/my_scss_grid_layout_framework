@@ -1,0 +1,105 @@
+@mixin pre($margin) {
+  margin-left: $margin
+}
+
+
+@mixin set-grid($grid-template-columns, $grid-template-rows: false, $vertical-margin: 0, $horizontal-margin: 0) {
+  display: grid;
+  grid-template-columns:  $grid-template-columns;
+
+  @if ($grid-template-rows) {
+    grid-template-rows: $grid-template-rows;
+  }
+
+  grid-column-gap: $horizontal-margin;
+  grid-row-gap: $vertical-margin;
+
+  @media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
+    >* {
+      @include pre($horizontal-margin);
+
+      &:first-child {
+        @include pre(0);
+      }
+    }
+  }
+}
+
+@mixin grid-element-allocation-hor($allocation...) {
+  $first-position: nth($allocation, 1);
+  $second-position: nth($allocation, 2);
+
+  @if type_of($second-position) == list {
+    $span-amount: nth($second-position, 2);
+    grid-column: $first-position / span $span-amount;
+  } @else {
+    $span-amount: $second-position - $first-position;
+    grid-column: $first-position / span $span-amount;
+  }
+}
+
+@mixin grid-element-allocation-ver($allocation...) {
+  $first-position: nth($allocation, 1);
+  $second-position: nth($allocation, 2);
+
+  @if type_of($second-position) == list {
+    $span-amount: nth($second-position, 2);
+    grid-row: $first-position / span $span-amount;
+  } @else {
+    $span-amount: $second-position - $first-position;
+    grid-row: $first-position / span $span-amount;
+  }
+}
+
+@mixin grid-inner-alignment($number-of-elements, $number-of-columns, $number-of-lines:1) {
+  $elements-on-row: $number-of-elements/$number-of-lines;
+  $position-hor: 1;
+  $position-ver: 1;
+
+  @for $i from 1 through $number-of-elements {
+    &:nth-child(#{$i}) {
+      @include grid-element-allocation-hor($position-hor, span $number-of-columns);
+      @include grid-element-allocation-ver($position-ver, span 1);
+      $is-new-line: $position-hor >= $elements-on-row;
+      $position-hor: if(not($is-new-line), $position-hor + $number-of-columns, 1);
+      $position-ver: if(not($is-new-line), $position-ver, $position-ver + 1);
+    }
+  }
+}
+
+@mixin grid-cell-alignment($horizontal-align: "center", $vertical-align: "center") {
+
+  @if ($horizontal-align == unquote("stretch")) {
+    justify-self: stretch;
+  }
+
+  @if ($horizontal-align == unquote("left")) {
+    justify-self: flex-start;
+  }
+
+  @if ($horizontal-align == unquote("right")) {
+    justify-self: flex-end;
+  }
+
+  @if ($horizontal-align == unquote("center")) {
+    justify-self: center;
+  }
+
+  @if ($vertical-align == unquote("stretch")) {
+    align-self: stretch;
+  }
+
+  @if ($vertical-align == unquote("top")) {
+    align-self: flex-start;
+  }
+
+  @if ($vertical-align == unquote("bottom")) {
+    align-self: flex-end;
+  }
+
+  @if ($vertical-align == unquote("center")) {
+    align-self: center;
+  }
+}
+
+

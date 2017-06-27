@@ -1,0 +1,11 @@
+.container {
+  @include set-grid(repeat(4, 1fr), $vertical-margin: 20px);
+  @include grid-cell-alignment($horizontal-align: "left");
+
+  .item {
+    @include grid-inner-alignment(4, 1);
+    height: 400px;
+    border: 1px solid teal;
+    background: salmon;
+  }
+}

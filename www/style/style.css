@@ -1,0 +1,15 @@
+.container {
+  justify-self: flex-start;
+  align-self: center; }
+  .container:nth-child(1) {
+    grid-column: 1/span 1;
+    grid-row: 1/span 1; }
+  .container:nth-child(2) {
+    grid-column: 2/span 1;
+    grid-row: 1/span 1; }
+  .container:nth-child(3) {
+    grid-column: 3/span 1;
+    grid-row: 1/span 1; }
+  .container .item {
+    height: 400px;
+    border: 1px solid teal; }
